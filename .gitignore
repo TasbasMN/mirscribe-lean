@@ -1,0 +1,17 @@
+# all big result files
+results/*
+
+# all temp files
+scripts/**/*.pyc
+
+# genome FASTA files
+data/**/*.fa
+
+# vscode config
+.vscode
+
+# mac
+.DS_Store
+
+# work in progress
+wip/*
