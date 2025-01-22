@@ -17,8 +17,8 @@ pipx install poetry
 
 2. Clone the repository:
 ```bash
-git clone [repository-url]
-cd [repository-name]
+git clone https://github.com/TasbasMN/mirscribe-lean
+cd mirscribe-lean
 ```
 
 3. Install dependencies:
