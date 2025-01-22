@@ -1,13 +1,37 @@
-This is the lean version of mirscribe pipeline's vcf analysis branch, until the xgboost step.
+## MirScribe Pipeline - VCF Analysis Module
 
-how to install:
+This repository contains the streamlined version of MirScribe pipeline's VCF analysis branch, focusing on pre-processing steps before XGBoost modeling.
 
-clone repo
+### Prerequisites
 
-install env (install poetry through pipx if you don't have it already)
+- Python 3.8+
+- Poetry (package manager)
+- Git
 
-pyensembl install --release 75
+### Installation
 
+1. Install Poetry if not already installed:
+```bash
+pipx install poetry
+```
+
+2. Clone the repository:
+```bash
+git clone [repository-url]
+cd [repository-name]
+```
+
+3. Install dependencies:
+```bash
+poetry install
+```
+
+4. Install Pyensembl data:
+```bash
+poetry run pyensembl install --release 75
+```
+
+The pipeline is now ready to use. See [Pipeline Architecture](#pipeline-architecture) section for details about the components and data flow.
 
 ## Pipeline Architecture
 
