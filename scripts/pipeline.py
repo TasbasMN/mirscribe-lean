@@ -10,43 +10,40 @@ def configure_pipeline_logging(log_file_path=None, log_level=logging.INFO):
     """Configure logging for the entire pipeline
 
     Args:
-        log_file_path (str, optional): Path to log file. If None, logs only to console
-        log_level (int, optional): Logging level. Defaults to logging.INFO
+        log_file_path: Path to log file. If None, logs only to console
+        log_level: Logging level. Defaults to logging.INFO
     """
     global logger
 
-    # Create logger
     logger = logging.getLogger('pipeline')
     logger.setLevel(log_level)
 
-    # Create formatters
     console_formatter = logging.Formatter(
-        '%(asctime)s | %(levelname)8s | %(message)s')
+        '%(asctime)s | %(levelname)8s | %(message)s'
+    )
     file_formatter = logging.Formatter(
-        '%(asctime)s | %(levelname)8s | %(name)s | %(message)s')
+        '%(asctime)s | %(levelname)8s | %(name)s | %(message)s'
+    )
 
-    # Console handler
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(console_formatter)
-    console_handler.setLevel(logging.WARNING)  # Show only WARNING+ on console
+    console_handler.setLevel(logging.WARNING)
 
     logger.addHandler(console_handler)
 
-    # File handler if path provided
     if log_file_path:
-        # Ensure log directory exists
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
         file_handler = logging.FileHandler(log_file_path)
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
 
-    # Prevent logging from propagating to the root logger
     logger.propagate = False
 
     return logger
 
 
-def yield_chunks(filepath: str, chunksize: int) -> Generator[pd.DataFrame, None, None]:
+
+def yield_chunks(filepath, chunksize):
     """Reads VCF file in chunks"""
     logger.info(f"Reading: {os.path.basename(filepath)} | Chunk size: {chunksize}")
     
@@ -56,20 +53,15 @@ def yield_chunks(filepath: str, chunksize: int) -> Generator[pd.DataFrame, None,
             chunksize=chunksize,
             sep="\t",
             header=None,
-            names=VCF_COLNAMES,
+            names=VCF_COLNAMES
         )
     except Exception as e:
         logger.error(f"Read failed: {str(e)}")
         raise
 
 
-def process_chunk(
-    chunk: pd.DataFrame,
-    start_index: int,
-    end_index: int,
-    output_dir: str,
-    vcf_id: str
-) -> Tuple[int, int]:
+
+def process_chunk(chunk, start_index, end_index, output_dir, vcf_id):
     """
     Applies transformations, writes the chunk to a CSV file.
     Returns (start_index, end_index) so we know which rows were processed.
@@ -92,15 +84,8 @@ def process_chunk(
         raise
 
 
-def process_chunk_with_retry(
-    chunk: pd.DataFrame,
-    start_index: int,
-    end_index: int,
-    output_dir: str,
-    vcf_id: str,
-    retry_count: int,
-    max_retries: int
-) -> Tuple[int, int]:
+def process_chunk_with_retry(chunk, start_index, end_index, output_dir, vcf_id, 
+                           retry_count, max_retries):
     """
     Wraps process_chunk with a simple retry mechanism.
     """
@@ -108,7 +93,7 @@ def process_chunk_with_retry(
         return process_chunk(chunk, start_index, end_index, output_dir, vcf_id)
     except Exception as e:
         logger.warning(
-            f"Retry {retry_count +1} of {max_retries} for chunk {start_index}-{end_index}. "
+            f"Retry {retry_count + 1} of {max_retries} for chunk {start_index}-{end_index}. "
             f"Exception: {e}"
         )
         if retry_count >= max_retries:
@@ -124,12 +109,10 @@ def process_chunk_with_retry(
             max_retries
         )
 
-
-def transform_chunk(chunk: pd.DataFrame) -> pd.DataFrame:
+def transform_chunk(chunk):
     """Transform chunk"""
     logger.debug(f"Transform start | Rows: {len(chunk)}")
     try:
-
         # Convert chromosome column to string
         chunk["chr"] = chunk["chr"].astype(str)
 
@@ -149,14 +132,8 @@ def transform_chunk(chunk: pd.DataFrame) -> pd.DataFrame:
         raise
 
 
-def run_pipeline(
-    vcf_full_path: str,
-    chunksize: int,
-    output_dir: str,
-    vcf_id: str,
-    max_workers: int = ARG_WORKERS,
-    max_retries: int = 3
-) -> None:
+def run_pipeline(vcf_full_path, chunksize, output_dir, vcf_id, 
+                max_workers=ARG_WORKERS, max_retries=3):
     """
     Main pipeline function.
     """

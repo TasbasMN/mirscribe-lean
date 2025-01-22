@@ -11,10 +11,10 @@ def main():
         # Configure logging
         logger = configure_pipeline_logging(log_file_path='logs/pipeline.log',log_level=logging.INFO)
 
-        # Test logging levels
-        logger.debug("Debug message - Pipeline starting")
-        logger.info("Info message - Pipeline configuration complete")
-        logger.warning("Warning message - This is a test warning")
+        # # Test logging levels
+        # logger.debug("Debug message - Pipeline starting")
+        # logger.info("Info message - Pipeline configuration complete")
+        # logger.warning("Warning message - This is a test warning")
 
         # Run pipeline
         run_pipeline(
