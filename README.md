@@ -4,7 +4,7 @@ how to install:
 
 clone repo
 
-install env
+install env (install poetry through pipx if you don't have it already)
 
 pyensembl install --release 75
 
